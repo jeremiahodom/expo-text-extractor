@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expo Text Extractor - Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav a:hover {
+            background-color: #f0f2ff;
+        }
+
+        .content {
+            background: white;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .section {
+            padding: 3rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section h3 {
+            color: #555;
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .section h4 {
+            color: #666;
+            font-size: 1.25rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: #667eea;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .platform-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .platform-table th,
+        .platform-table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .platform-table th {
+            background-color: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .platform-table .supported {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .platform-table .not-supported {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-block.bash {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+
+        .code-block.typescript {
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            border-color: #3c3c3c;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .highlight.info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        .highlight.warning {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .api-method {
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .api-method h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .parameter {
+            background-color: #e9ecef;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            font-family: monospace;
+        }
+
+        .return-type {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .demo-section {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .demo-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .footer {
+            background-color: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 2rem 1rem;
+            }
+            
+            .nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>📱 Expo Text Extractor</h1>
+            <p class="subtitle">A powerful React Native library for efficient text recognition (OCR) using Google ML Kit on Android and Apple Vision on iOS</p>
+        </div>
+    </header>
+
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#api">API Reference</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#compatibility">Compatibility</a></li>
+                <li><a href="#demo">Demo</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="content">
+            <section id="overview" class="section">
+                <h2>🔍 Overview</h2>
+                <p>Expo Text Extractor is a modern React Native library that brings powerful Optical Character Recognition (OCR) capabilities to your mobile applications. Built specifically for Expo projects, it leverages native platform technologies to deliver accurate and efficient text extraction from images.</p>
+                
+                <h3>Key Features</h3>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li><strong>Cross-Platform Support:</strong> Works seamlessly on Android and iOS devices</li>
+                    <li><strong>Native Performance:</strong> Uses Google ML Kit on Android and Apple Vision on iOS</li>
+                    <li><strong>Easy Integration:</strong> Simple API with just two main functions</li>
+                    <li><strong>Modern Architecture:</strong> Built for Expo SDK 52+ with TypeScript support</li>
+                    <li><strong>Real-time Processing:</strong> Efficient text recognition from camera or gallery images</li>
+                </ul>
+
+                <div class="highlight info">
+                    <strong>💡 Pro Tip:</strong> This library is perfect for applications that need to extract text from receipts, documents, business cards, signs, or any image containing text.
+                </div>
+            </section>
+
+            <section id="installation" class="section">
+                <h2>📦 Installation</h2>
+                <p>Getting started with Expo Text Extractor is simple. Follow these steps to add it to your project:</p>
+
+                <h3>Prerequisites</h3>
+                <div class="highlight warning">
+                    <strong>⚠️ Important:</strong> Ensure your project is running Expo SDK 52 or higher.
+                </div>
+
+                <h3>Install the Package</h3>
+                <p>Use the Expo CLI to install the library:</p>
+                <div class="code-block bash">npx expo install expo-text-extractor</div>
+
+                <h3>Alternative Installation</h3>
+                <p>You can also use npm or yarn:</p>
+                <div class="code-block bash">npm install expo-text-extractor</div>
+                <div class="code-block bash">yarn add expo-text-extractor</div>
+
+                <h3>Configuration</h3>
+                <p>No additional configuration is required! The library works out of the box with Expo managed workflow.</p>
+            </section>
+
+            <section id="api" class="section">
+                <h2>📚 API Reference</h2>
+                <p>The Expo Text Extractor provides a simple and intuitive API with two main exports:</p>
+
+                <div class="api-method">
+                    <h4>isSupported</h4>
+                    <p><strong>Type:</strong> <span class="return-type">boolean</span></p>
+                    <p>A boolean value that indicates whether the text extraction module is supported on the current device.</p>
+                    
+                    <h4>Usage Example:</h4>
+                    <div class="code-block typescript">import { isSupported } from 'expo-text-extractor';
+
+if (isSupported) {
+  console.log('Text extraction is supported on this device.');
+} else {
+  console.log('Text extraction is not supported on this device.');
+}</div>
+                </div>
+
+                <div class="api-method">
+                    <h4>extractTextFromImage(uri: string)</h4>
+                    <p><strong>Type:</strong> <span class="return-type">Promise&lt;string[]&gt;</span></p>
+                    <p>Extracts text from an image and returns the recognized text as an array of strings.</p>
+                    
+                    <h4>Parameters:</h4>
+                    <div class="parameter">
+                        <strong>uri</strong> (string): The URI of the image to extract text from. Supports both local file URIs and remote URLs.
+                    </div>
+
+                    <h4>Returns:</h4>
+                    <p>A Promise that resolves to an array of strings, where each string represents a line of recognized text.</p>
+
+                    <h4>Usage Example:</h4>
+                    <div class="code-block typescript">import { extractTextFromImage } from 'expo-text-extractor';
+
+const extractText = async (imageUri: string) => {
+  try {
+    const extractedTexts = await extractTextFromImage(imageUri);
+    console.log('Extracted texts:', extractedTexts);
+    return extractedTexts;
+  } catch (error) {
+    console.error('Text extraction failed:', error);
+    return [];
+  }
+};</div>
+                </div>
+            </section>
+
+            <section id="examples" class="section">
+                <h2>💡 Examples</h2>
+
+                <h3>Basic Usage with Image Picker</h3>
+                <div class="code-block typescript">import React, { useState } from 'react';
+import { View, Button, Text, Alert } from 'react-native';
+import { launchImageLibraryAsync } from 'expo-image-picker';
+import { extractTextFromImage, isSupported } from 'expo-text-extractor';
+
+export default function App() {
+  const [extractedText, setExtractedText] = useState&lt;string[]&gt;([]);
+
+  const handleImagePicker = async () => {
+    if (!isSupported) {
+      Alert.alert('Error', 'Text extraction is not supported on this device');
+      return;
+    }
+
+    const result = await launchImageLibraryAsync({
+      mediaTypes: ['images'],
+    });
+
+    if (!result.canceled && result.assets?.[0]) {
+      try {
+        const texts = await extractTextFromImage(result.assets[0].uri);
+        setExtractedText(texts);
+      } catch (error) {
+        Alert.alert('Error', 'Failed to extract text from image');
+      }
+    }
+  };
+
+  return (
+    &lt;View style={{ flex: 1, padding: 20 }}&gt;
+      &lt;Button title="Pick Image & Extract Text" onPress={handleImagePicker} /&gt;
+      
+      {extractedText.length > 0 && (
+        &lt;View style={{ marginTop: 20 }}&gt;
+          &lt;Text style={{ fontWeight: 'bold' }}&gt;Extracted Text:&lt;/Text&gt;
+          {extractedText.map((line, index) => (
+            &lt;Text key={index} style={{ marginTop: 5 }}&gt;{line}&lt;/Text&gt;
+          ))}
+        &lt;/View&gt;
+      )}
+    &lt;/View&gt;
+  );
+}</div>
+
+                <h3>Camera Integration Example</h3>
+                <div class="code-block typescript">import { launchCameraAsync } from 'expo-image-picker';
+import { extractTextFromImage } from 'expo-text-extractor';
+
+const handleCameraCapture = async () => {
+  const result = await launchCameraAsync({
+    mediaTypes: ['images'],
+  });
+
+  if (!result.canceled && result.assets?.[0]) {
+    const extractedTexts = await extractTextFromImage(result.assets[0].uri);
+    console.log('Camera extracted text:', extractedTexts);
+  }
+};</div>
+
+                <h3>Error Handling Best Practices</h3>
+                <div class="code-block typescript">const safeTextExtraction = async (imageUri: string): Promise&lt;string[]&gt; => {
+  try {
+    // Check device support first
+    if (!isSupported) {
+      throw new Error('Text extraction not supported on this device');
+    }
+
+    // Validate URI
+    if (!imageUri || typeof imageUri !== 'string') {
+      throw new Error('Invalid image URI provided');
+    }
+
+    const result = await extractTextFromImage(imageUri);
+    
+    // Handle empty results
+    if (!result || result.length === 0) {
+      console.log('No text found in the image');
+      return [];
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Text extraction error:', error);
+    // Return empty array instead of throwing in production apps
+    return [];
+  }
+};</div>
+            </section>
+
+            <section id="compatibility" class="section">
+                <h2>🔧 Platform Compatibility</h2>
+                <p>Expo Text Extractor supports multiple platforms with varying levels of functionality:</p>
+
+                <table class="platform-table">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Android Device</th>
+                            <th>Android Emulator</th>
+                            <th>iOS Device</th>
+                            <th>iOS Simulator</th>
+                            <th>Web</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Support Status</strong></td>
+                            <td class="supported">✅</td>
+                            <td class="supported">✅</td>
+                            <td class="supported">✅</td>
+                            <td class="supported">✅</td>
+                            <td class="not-supported">❌</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Technology Stack</h3>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li><strong>Android:</strong> Google ML Kit Text Recognition API</li>
+                    <li><strong>iOS:</strong> Apple Vision Framework</li>
+                    <li><strong>Web:</strong> Not supported (native OCR required)</li>
+                </ul>
+
+                <div class="highlight info">
+                    <strong>📱 Device Requirements:</strong> Works on both physical devices and simulators/emulators for development and testing.
+                </div>
+            </section>
+
+            <section id="demo" class="demo-section">
+                <h2 style="color: white;">🎬 Demo</h2>
+                <p style="margin-bottom: 2rem;">See Expo Text Extractor in action:</p>
+                <img src="https://github.com/pchalupa/readme-assets/blob/main/expo-text-extractor.gif" 
+                     alt="Expo Text Extractor Demo" 
+                     style="max-width: 75%; height: auto;">
+                <p style="margin-top: 1rem; opacity: 0.9;">Real-time text extraction from camera and gallery images</p>
+            </section>
+
+            <section class="section">
+                <h2>🚀 Next Steps</h2>
+                <p>Now that you have Expo Text Extractor set up, here are some ideas for your next steps:</p>
+                
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li>Check out the <a href="https://github.com/pchalupa/expo-text-extractor/blob/main/example/App.tsx" style="color: #667eea;">complete example app</a></li>
+                    <li>Integrate with your existing camera or image picker workflow</li>
+                    <li>Add text processing and analysis features</li>
+                    <li>Implement document scanning capabilities</li>
+                    <li>Build receipt or business card scanning features</li>
+                </ul>
+
+                <div class="highlight">
+                    <strong>🔗 Useful Links:</strong><br>
+                    • <a href="https://github.com/pchalupa/expo-text-extractor" style="color: #667eea;">GitHub Repository</a><br>
+                    • <a href="https://docs.expo.dev/" style="color: #667eea;">Expo Documentation</a><br>
+                    • <a href="https://developers.google.com/ml-kit/vision/text-recognition" style="color: #667eea;">Google ML Kit Text Recognition</a><br>
+                    • <a href="https://developer.apple.com/documentation/vision" style="color: #667eea;">Apple Vision Framework</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Expo Text Extractor. Built with ❤️ for the React Native community.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(255, 255, 255, 0.95)';
+                nav.style.backdropFilter = 'blur(10px)';
+            } else {
+                nav.style.background = 'white';
+                nav.style.backdropFilter = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
